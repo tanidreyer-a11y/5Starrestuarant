@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vuurhuis | Steakhouse (concept demo by ADC Innovations)</title>
+<meta name="description" content="Vuurhuis is a concept steakhouse site built by ADC Innovations: dry-aged cuts cooked over wood coals. This is a demo, not a real restaurant.">
+<meta name="theme-color" content="#101112">
+<meta property="og:title" content="Vuurhuis | Steakhouse concept">
+<meta property="og:description" content="Fire, salt and time. A concept site by ADC Innovations.">
+<meta property="og:type" content="website">
+<!-- DEPLOY STEP: og:image needs the absolute live URL -->
+<meta property="og:image" content="assets/og-share.webp">
+<link rel="preload" href="assets/big-shoulders-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#cuts">Skip to the cuts</a>
+<canvas class="ghost" id="ghost" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="mark" href="#top" aria-label="Vuurhuis, back to top">VUURHUIS</a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#cuts">The cuts</a>
+    <a href="#choose">Choose your cut</a>
+    <a href="#reserve">Reserve</a>
+  </nav>
+  <a class="beam beam-sm nav-cta" href="#reserve">Reserve a table</a>
+</header>
+
+<main id="top">
+  <section class="film" id="film" aria-label="Vuurhuis, the room and the fire">
+    <div class="film-stage">
+      <video id="filmVideo" poster="assets/poster-room.jpg" muted playsinline preload="none" aria-hidden="true"></video>
+      <div class="loader" id="loader" role="progressbar" aria-label="Loading the film" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle class="loader-arc" id="loaderArc" cx="18" cy="18" r="16" pathLength="100"></circle></svg>
+        <span id="loaderPct">0%</span>
+      </div>
+      <div class="scrim-base" aria-hidden="true"></div>
+
+      <div class="band band-1 is-on" data-a="0" data-b="0.30">
+        <h1><span class="mask"><span>Fire, salt</span></span> <span class="mask"><span>and time.</span></span></h1>
+        <p>A steakhouse for long dinners and short menus.</p>
+        <a class="beam" href="#reserve">Reserve a table</a>
+      </div>
+      <div class="band band-2" data-a="0.36" data-b="0.64">
+        <h2 aria-label="A room built around one fire."><span class="w" style="--i:0">A</span> <span class="w" style="--i:1">room</span> <span class="w" style="--i:2">built</span> <span class="w" style="--i:3">around</span> <span class="w" style="--i:4">one</span> <span class="w" style="--i:5">fire.</span></h2>
+        <p>Every cut is cooked in view, over wood coals, and left to rest before it reaches you.</p>
+      </div>
+      <div class="band band-3" data-a="0.72" data-b="1">
+        <h2>Salt. Heat. Rest.</h2>
+        <p>Dry-aged in house. Never rushed.</p>
+        <a class="beam" href="#cuts">See the cuts</a>
+      </div>
+
+      <div class="static-hero" aria-hidden="true">
+        <img src="assets/poster-steak.jpg" alt="">
+      </div>
+    </div>
+  </section>
+
+  <section class="statement" aria-label="About">
+    <p class="reveal-words">We cook four cuts, one way, on one fire. The rest of the evening is yours to take slowly.</p>
+    <figure class="statement-media">
+      <img src="assets/knife-board.webp" alt="A carved steak sliced on a walnut board, pink at the centre, with flaky salt and a carving knife" width="1376" height="768" loading="lazy" decoding="async">
+    </figure>
+  </section>
+
+  <section class="flames" aria-label="The fire">
+    <div class="flames-frame">
+      <img src="assets/grill-flames.webp" alt="Flames rising through an iron grate over glowing embers, split hardwood stacked behind" width="1376" height="768" loading="lazy" decoding="async">
+    </div>
+    <p class="flames-line">Hardwood only. Lit at four, cooked on from six.</p>
+  </section>
+
+  <section class="gallery" id="cuts" aria-label="The cuts">
+    <div class="gallery-track" id="track">
+      <div class="gallery-intro">
+        <h2>Four cuts.<br>One fire.</h2>
+        <p>Scroll to move across the board. Each cut is aged in house and finished over wood coals.</p>
+      </div>
+      <article class="cut cut-a">
+        <div class="cut-media"><img src="assets/cut-ribeye.webp" alt="A raw marbled ribeye on dark slate, scattered with coarse salt" width="1376" height="768" loading="eager" decoding="async"></div>
+        <h3>Ribeye</h3>
+        <p class="cut-note">Rich, marbled, forgiving. The cut that tastes most of the fire.</p>
+        <p class="cut-pair">Pairs with a structured Cabernet.</p>
+      </article>
+      <article class="cut cut-b">
+        <div class="cut-media"><img src="assets/cut-fillet.webp" alt="A seared fillet standing on a cast-iron plate, smoke rising" width="1376" height="768" loading="eager" decoding="async"></div>
+        <h3>Fillet</h3>
+        <p class="cut-note">Tender and quiet. Cooked gently, seasoned with salt and little else.</p>
+        <p class="cut-pair">Pairs with a soft Pinot Noir.</p>
+      </article>
+      <article class="cut cut-a">
+        <div class="cut-media"><img src="assets/cut-tbone.webp" alt="A seared T-bone on a wooden board with rosemary and garlic" width="1376" height="768" loading="eager" decoding="async"></div>
+        <h3>T-bone</h3>
+        <p class="cut-note">Two textures on one bone: a firm strip and a tender fillet, shared or not.</p>
+        <p class="cut-pair">Pairs with a peppery Syrah.</p>
+      </article>
+      <article class="cut cut-b">
+        <div class="cut-media"><img src="assets/cut-sirloin.webp" alt="A grilled sirloin on the bone with a thick fat cap, resting on butcher's paper" width="1376" height="768" loading="eager" decoding="async"></div>
+        <h3>Sirloin on the bone</h3>
+        <p class="cut-note">A thick cap of fat and a deep, mineral finish. For slow eaters.</p>
+        <p class="cut-pair">Pairs with an aged Bordeaux blend.</p>
+      </article>
+      <div class="gallery-outro">
+        <h2>Not sure which?</h2>
+        <a class="beam" href="#choose">Choose your cut</a>
+      </div>
+    </div>
+    <div class="gallery-progress" aria-hidden="true"><span id="trackBar"></span></div>
+  </section>
+
+  <section class="split split-ageing" aria-label="The ageing room">
+    <div class="split-copy">
+      <h2>The ageing<br>room.</h2>
+      <p>Whole primals hang beside a salt-brick wall for weeks before they meet the fire. Time does the work no marinade can.</p>
+    </div>
+    <figure class="split-media wipe-x">
+      <img src="assets/ageing-room.webp" alt="Beef primals hanging in a white-tiled dry-ageing cabinet beside a glowing salt-brick wall" width="1376" height="768" loading="lazy" decoding="async">
+    </figure>
+  </section>
+
+  <section class="split split-cellar" aria-label="The cellar">
+    <figure class="split-media iris">
+      <img src="assets/cellar.webp" alt="A candlelit wine cellar aisle with oak racks of old bottles and a barrel" width="1376" height="768" loading="lazy" decoding="async">
+    </figure>
+    <div class="split-copy">
+      <h2>The<br>cellar.</h2>
+      <p>Bottles chosen to stand up to smoke and fat, opened by people who have tasted them with the food.</p>
+    </div>
+  </section>
+
+  <section class="choose" id="choose" aria-label="Choose your cut">
+    <div class="choose-bg" aria-hidden="true"><img src="assets/grill-coals.webp" alt="" width="1376" height="768" loading="lazy" decoding="async"></div>
+    <div class="choose-field" id="field">
+      <svg class="choose-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="choose-halo" aria-hidden="true"></div>
+      <div class="choose-core"><span>Tonight</span></div>
+    </div>
+    <div class="choose-summary" id="summary" aria-live="polite">
+      <h2>Choose your cut.</h2>
+      <p>Four cuts connect to tonight. Pick one and we will note it on your booking.</p>
+    </div>
+  </section>
+
+  <section class="reserve" id="reserve" aria-label="Reserve a table">
+    <div class="reserve-inner">
+      <div class="reserve-copy">
+        <figure class="reserve-media">
+          <img src="assets/table.webp" alt="A single table set by a window at night, white linen, a crystal glass and a candle" width="1376" height="768" loading="lazy" decoding="async">
+        </figure>
+        <h2><span class="mask"><span>Reserve</span></span> <span class="mask"><span>a table.</span></span></h2>
+        <p>Tell us when and how many. We confirm by message the same day.</p>
+        <p class="demo-note">Concept demo by ADC Innovations. Vuurhuis is not a real restaurant, so the booking button opens a message to a placeholder number.</p>
+      </div>
+      <form class="form" id="form" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" autocomplete="name">
+          <p class="err" id="nameErr" hidden>Enter your name so we know who to confirm with.</p>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date">
+          </div>
+          <div class="field">
+            <label for="guests">Guests</label>
+            <select id="guests" name="guests">
+              <option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+          </div>
+        </div>
+        <fieldset class="field">
+          <legend>First cut you are eyeing</legend>
+          <div class="chips" id="chips" role="radiogroup"></div>
+        </fieldset>
+        <div class="field">
+          <label for="note">Anything we should know?</label>
+          <textarea id="note" name="note" rows="3"></textarea>
+        </div>
+        <div class="actions">
+          <button class="beam" type="submit">Send booking request</button>
+          <p class="sent" id="sent" hidden role="status">Your message is ready to send.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span class="mark">VUURHUIS</span>
+  <span>Concept demo. Hours, address and menu to be confirmed by the venue.</span>
+  <span>Designed and built by ADC Innovations</span>
+</footer>
+
+<script src="assets/gsap.min.js"></script>
+<script src="assets/ScrollTrigger.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
