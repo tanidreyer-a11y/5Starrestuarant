@@ -59,7 +59,7 @@
     const loader = $("#loader"), arc = $("#loaderArc"), pct = $("#loaderPct");
     const small = matchMedia("(max-aspect-ratio: 1/1)").matches;
     const canvas = $("#filmCanvas"), ctx = canvas.getContext("2d", { alpha: false }), poster = $(".film-poster");
-    const N = 160, dir = small ? "m" : "d", MAX = small ? 4 : 6;
+    const N = 160, dir = small ? "m" : "d", MAX = 8;
     const frames = new Array(N); let settled = 0, failed = 0, drawn = -1;
     let shownPct = -1;
     const progress = p => { const v = Math.round(p * 100); if (v === shownPct) return; shownPct = v; arc.style.strokeDashoffset = 100 - v; pct.textContent = v + "%"; loader.setAttribute("aria-valuenow", v); };
