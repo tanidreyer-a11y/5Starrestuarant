@@ -45,40 +45,63 @@
     return api;
   })();
 
-  /* Hero film: scroll scrubs currentTime. Whole file loads first (Blob + progress) so the scrub never
-     outruns the download; Apple/WebKit can't decode blob: URLs, so it streams the real URL instead.
-     Phones get a 720p encode. Lerped, seek-gated, iOS-primed. */
+  /* Hero film: a 160-frame image sequence painted to a canvas. Frames load in passes (every 32nd,
+     16th, 8th ...), so the scrub works after about 1 MB and sharpens as the rest arrives. No video
+     decoder means no seek stutter on slow lines and no iOS media quirks. Portrait screens get a
+    portrait-cropped 540x960 set, landscape screens a 1280x720 set. */
   (() => {
-    const film = $("#film"), vid = $("#filmVideo"), bands = $$(".band");
+    const film = $("#film"), bands = $$(".band");
     const ghostEl = $("#ghost");
     const setGhost = active => { ghostEl.classList.toggle("off", active); active ? ghost.pause() : ghost.resume(); };
     const filmSeen = ScrollTrigger.create({ trigger: film, start: "top bottom", end: "bottom top", onToggle: s => setGhost(s.isActive) });
     requestAnimationFrame(() => setGhost(filmSeen.isActive));
     if (reduce) return;
     const loader = $("#loader"), arc = $("#loaderArc"), pct = $("#loaderPct");
-    const small = matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-    const src = small ? "assets/film-720.mp4" : "assets/film-full.mp4";
+    const small = matchMedia("(max-aspect-ratio: 1/1)").matches;
+    const canvas = $("#filmCanvas"), ctx = canvas.getContext("2d", { alpha: false }), poster = $(".film-poster");
+    const N = 160, dir = small ? "m" : "d", MAX = small ? 4 : 6;
+    const frames = new Array(N); let settled = 0, failed = 0, drawn = -1;
     let shownPct = -1;
     const progress = p => { const v = Math.round(p * 100); if (v === shownPct) return; shownPct = v; arc.style.strokeDashoffset = 100 - v; pct.textContent = v + "%"; loader.setAttribute("aria-valuenow", v); };
     const finish = () => { progress(1); loader.classList.add("done"); };
-    const native = () => { vid.preload = "auto"; vid.src = src; vid.load(); setTimeout(finish, 10000); };
-    vid.addEventListener("loadeddata", finish, { once: true });
-    const blobLoad = async () => {
-      const ctrl = new AbortController(); const watchdog = setTimeout(() => ctrl.abort(), 20000);
-      try {
-        const res = await fetch(src, { signal: ctrl.signal }); if (!res.ok || !res.body) throw new Error("fetch " + res.status);
-        const total = +res.headers.get("content-length") || 0, reader = res.body.getReader(), parts = []; let got = 0; const t0 = performance.now(); let checked = false;
-        for (;;) {
-          const { done, value } = await reader.read(); if (done) break;
-          parts.push(value); got += value.length; if (total) progress(got / total * 0.98);
-          const el = performance.now() - t0;
-          if (!checked && el > 600 && total) { checked = true; if ((total / (got / el)) > 8000) { ctrl.abort(); throw new Error("slow"); } }
-        }
-        clearTimeout(watchdog);
-        vid.src = URL.createObjectURL(new Blob(parts, { type: "video/mp4" }));
-      } catch (e) { clearTimeout(watchdog); native(); }
+    setTimeout(finish, 30000);
+
+    const order = [0, N - 1]; const seen = new Set(order);
+    [32, 16, 8, 4, 2, 1].forEach(s => { for (let i = 0; i < N; i += s) if (!seen.has(i)) { seen.add(i); order.push(i); } });
+    const url = i => `assets/frames/${dir}/${String(i).padStart(3, "0")}.webp`;
+    let cursor = 0, inflight = 0;
+    const pump = () => {
+      while (inflight < MAX && cursor < order.length) {
+        const i = order[cursor++], img = new Image(); inflight++;
+        img.decoding = "async"; img.src = url(i);
+        img.decode().then(() => { frames[i] = img; }, () => { failed++; }).finally(() => {
+          inflight--; settled++; progress(settled / N);
+          if (settled === N) finish();
+          if (failed === N) { canvas.style.display = "none"; $(".static-hero").style.display = "block"; }
+          draw(); pump();
+        });
+      }
     };
-    let dur = 0, target = 0, shown = 0, busy = false, wd = 0, running = false, last = performance.now();
+
+    const fit = () => {
+      const r = canvas.getBoundingClientRect(), frameW = small ? 540 : 1280, frameH = small ? 960 : 720;
+      const cover = Math.max(r.width / frameW, r.height / frameH);
+      const d = Math.min(devicePixelRatio || 1, 1 / cover);
+      canvas.width = Math.max(1, Math.round(r.width * d)); canvas.height = Math.max(1, Math.round(r.height * d));
+      drawn = -1; draw();
+    };
+    const draw = () => {
+      const want = Math.round(shown * (N - 1)); let k = -1;
+      for (let o = 0; o < N && k < 0; o++) { if (frames[want - o]) k = want - o; else if (frames[want + o]) k = want + o; }
+      if (k < 0 || k === drawn) return;
+      const img = frames[k], cw = canvas.width, ch = canvas.height, s = Math.max(cw / img.naturalWidth, ch / img.naturalHeight);
+      const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
+      ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh); drawn = k;
+      if (poster) poster.style.visibility = "hidden";
+    };
+    let resizeRaf = 0; addEventListener("resize", () => { cancelAnimationFrame(resizeRaf); resizeRaf = requestAnimationFrame(fit); });
+
+    let target = 0, shown = 0, running = false, last = performance.now();
     const cache = bands.map(() => -1);
     const ss = t => t * t * (3 - 2 * t);
     const bandOpacity = (p, a, b, first, lastBand) => {
@@ -96,18 +119,10 @@
       const dt = Math.min(100, now - last); last = now;
       shown += (target - shown) * (1 - Math.pow(1 - .17, dt / 16.667));
       if (Math.abs(target - shown) < .0004) shown = target;
-      if (dur && !busy) {
-        const t = shown * (dur - .05);
-        if (Math.abs(t - vid.currentTime) > .02) { busy = true; vid.currentTime = t; clearTimeout(wd); wd = setTimeout(() => (busy = false), 300); }
-      }
-      setBands(shown);
-      if (running) requestAnimationFrame(tick);
+      draw(); setBands(shown);
+      if (running || shown !== target) requestAnimationFrame(tick);
     };
-    vid.addEventListener("seeked", () => { busy = false; clearTimeout(wd); });
-    vid.addEventListener("error", () => { busy = false; vid.style.display = "none"; $(".static-hero").style.display = "block"; });
-    const meta = () => { dur = vid.duration; void vid.play().then(() => vid.pause()).catch(() => {}); };
-    vid.addEventListener("loadedmetadata", meta, { once: true });
-    (navigator.vendor || "").includes("Apple") ? native() : blobLoad();
+    fit(); pump();
     ScrollTrigger.create({
       trigger: film, start: "top top", end: "bottom bottom",
       onUpdate: s => { target = s.progress; },

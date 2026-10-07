@@ -53,7 +53,7 @@ main, .foot { position: relative; z-index: var(--z-content); }
 /* Hero film */
 .film { height: 640svh; background: var(--ground); position: relative; }
 .film-stage { position: sticky; top: 0; height: 100svh; height: 100dvh; overflow: hidden; background: var(--ground); }
-.film-stage video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.film-poster, .film-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .scrim-base { position: absolute; inset: 0; background: radial-gradient(ellipse at 28% 62%, rgb(16 17 18 / 0.66), rgb(16 17 18 / 0.18) 60%, transparent 85%); pointer-events: none; }
 .band { position: absolute; left: clamp(1.25rem, 6vw, 6rem); bottom: clamp(3.5rem, 12vh, 7.5rem); max-width: min(46rem, calc(100% - 2.5rem)); opacity: 0; pointer-events: none; text-shadow: 0 1px 2px rgb(0 0 0 / 0.55), 0 0 18px rgb(0 0 0 / 0.5), 0 0 48px rgb(0 0 0 / 0.5); }
 .band.is-on { pointer-events: auto; }
@@ -220,7 +220,7 @@ input[aria-invalid="true"] { border-color: var(--coal); }
 @media (prefers-reduced-motion: reduce) {
   .beam::before { animation: none; --beam-angle: 150deg; }
   .film { height: 100svh; }
-  .film-stage video, .band-1, .band-2, .loader { display: none; }
+  .film-stage canvas, .film-poster, .band-1, .band-2, .loader { display: none; }
   .static-hero { display: block; }
   .band-3 { opacity: 1; pointer-events: auto; }
   .band-3 h2 { letter-spacing: 0.01em; }

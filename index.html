@@ -11,6 +11,8 @@
 <meta property="og:type" content="website">
 <!-- DEPLOY STEP: og:image needs the absolute live URL -->
 <meta property="og:image" content="assets/og-share.webp">
+<link rel="preload" href="assets/frames/m/000.webp" as="image" fetchpriority="high" media="(max-aspect-ratio: 1/1)">
+<link rel="preload" href="assets/frames/d/000.webp" as="image" fetchpriority="high" media="(min-aspect-ratio: 1/1)">
 <link rel="preload" href="assets/big-shoulders-display-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/hanken-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
@@ -32,7 +34,11 @@
 <main id="top">
   <section class="film" id="film" aria-label="Vuurhuis, the room and the fire">
     <div class="film-stage">
-      <video id="filmVideo" poster="assets/poster-room.jpg" muted playsinline preload="none" aria-hidden="true"></video>
+      <picture>
+        <source media="(max-aspect-ratio: 1/1)" srcset="assets/frames/m/000.webp">
+        <img class="film-poster" src="assets/frames/d/000.webp" alt="" aria-hidden="true" fetchpriority="high">
+      </picture>
+      <canvas id="filmCanvas" aria-hidden="true"></canvas>
       <div class="loader" id="loader" role="progressbar" aria-label="Loading the film" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="16"></circle><circle class="loader-arc" id="loaderArc" cx="18" cy="18" r="16" pathLength="100"></circle></svg>
         <span id="loaderPct">0%</span>
